@@ -43,6 +43,13 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 
+
+
+
+
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,13 +96,14 @@ AUTHENTICATION_BACKENDS = [
 
 
 # Provider specific settings
-import os
-
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
         'APP': {
-            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-            'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
+            'client_id': '265828565476-8vojhf23bstlu0o7al3ssk8uv0ni9qcd.apps.googleusercontent.com',
+            'secret': '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',
             'key': ''
         },
         'AUTH_PARAMS': {
@@ -105,25 +113,6 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-
-
-# Provider specific settings
-# SOCIALACCOUNT_PROVIDERS = {
-#     'google': {
-#         # For each OAuth based provider, either add a ``SocialApp``
-#         # (``socialaccount`` app) containing the required client
-#         # credentials, or list them here:
-#         'APP': {
-#             'client_id': '265828565476-8vojhf23bstlu0o7al3ssk8uv0ni9qcd.apps.googleusercontent.com',
-#             'secret': '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',
-#             'key': ''
-#         },
-#         'AUTH_PARAMS': {
-#             'access_type': 'offline',
-#             'prompt': 'consent',
-#         }
-#     }
-# }
 
 
 #ACCOUNT_LOGIN_ON_GET = True  # Optional, use with caution
