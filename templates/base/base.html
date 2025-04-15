@@ -1,0 +1,187 @@
+{% extends 'base/main_base.html' %}
+
+
+{% block second_nav %}
+{% load static %}
+  <header id="header" class="header d-flex align-items-center sticky-top">
+      <div class="container-fluid container-xl position-relative d-flex align-items-center">
+        <a href="{% url 'myapp:home' %}" class="logo d-flex align-items-center me-auto">
+          <h1 class="sitename"><img src="{% static 'assets/img/logo.png' %}" alt="">  PandharpurGuide</h1>
+        </a>
+        
+    
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'myapp:home' %}#hero" class="active">Home</a></li>
+            
+            <li class="dropdown">
+              <a href="{% url 'myapp:home' %}#about">
+                <span>About</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="team.html">Team</a></li>
+                <li><a href="#blog-posts">PostsDetail</a></li>
+                {% if user.is_active and user.is_superuser and user.is_verified or user.is_admin %}
+
+
+                <li class="dropdown">
+                  <a href="#">
+                    <span>Log-Auths</span> 
+                    <i class="bi bi-chevron-down toggle-dropdown"></i>
+                  </a>
+                  <ul>
+                    <li><a href="{% url 'admin:index' %}">Admin-profile <i class="fas fa-user-circle"></i></a></li>
+                </ul>
+                
+                </li>
+                    
+                {% endif %}
+
+                {% if user.is_active and user.is_staff and user.is_superuser and user.is_verified and user.is_authority_to_manage_hotel and user.is_authenticated %}
+
+
+                <li class="dropdown">
+                  <a href="#">
+                    <span>Log-Auths</span> 
+                    <i class="bi bi-chevron-down toggle-dropdown"></i>
+                  </a>
+                  <ul>
+                    <li><a href="{% url 'admin:index' %}">Admin-profile <i class="fas fa-user-circle"></i></a></li>
+                </ul>
+                
+                </li>
+                    
+                {% endif %}
+
+                {% if not user.is_authenticated %}
+
+
+                
+                <li class="dropdown">
+                  <a href="#">
+                    <span>Log-Auths</span> 
+                    <i class="bi bi-chevron-down toggle-dropdown"></i>
+                  </a>
+                  <ul>
+                    <li><a href="{% url 'user:staff_signin' %}">Log in Staff <i class="fas fa-user-circle"></i></a></li>
+                    <li><a href="{% url 'user:maintainer_signin' %}">Log in Maintainer <i class="fas fa-user-circle"></i></a></li>
+                    <li><a href="{% url 'admin:index' %}">Log in Admin <i class="fas fa-user-circle"></i></a></li> <!-- Updated to match admin URL -->
+                </ul>
+                
+                </li>
+                {% endif %}
+              </ul>
+            </li>
+        
+            <li class="dropdown">
+              <a href="">
+                <span>Accommodations</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="{% url 'homepage' %}">Non AC Rooms</a></li>
+                <li><a href="#">Dormitory</a></li>
+                <li><a href="#">Math / Dharmshala</a></li>
+                <li class="dropdown">
+                  <a href="">
+                    <span>More Temples</span> 
+                    <i class="bi bi-chevron-down toggle-dropdown"></i>
+                  </a>
+                  <ul>
+                    <li><a href="#">Kaikadi Temple</a></li>
+                    <li><a href="#">Padmavati Temple</a></li>
+                    <li><a href="#">Other Shrines</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+        
+            <li class="dropdown">
+              <a href="">
+                <span>Restaurant</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="#">AC Restaurant</a></li>
+                <li><a href="#">Dining Hall</a></li>
+                <li><a href="#">Thali System</a></li>
+                <li><a href="#">Mess</a></li>
+              </ul>
+            </li>
+        
+            <li class="dropdown">
+              <a href="">
+                <span>Puja</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="#">Vithal Mandir Puja</a></li>
+                <li><a href="#">Pundhal derog Puja</a></li>
+                <li><a href="#">Dnyaneswar Mauli Puja</a></li>
+                <li><a href="#">Tukaram Maharaj Puja</a></li>
+                <li><a href="#">Mahadev Puja</a></li>
+                <li><a href="#">Vishupad Puja</a></li>
+                <li><a href="#">Chandrabhaga Puja</a></li>
+                <li><a href="#">Satyanarayan Puja</a></li>
+                <li><a href="#">Dashkriya Vidhi</a></li>
+              </ul>
+            </li>
+        
+            <li class="dropdown">
+              <a href="">
+                <span>Visit Places</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="#">God Shree Vitthal Rukmini Mandir</a></li>
+                <li><a href="#">Sant Dnyaneswar Maharaj Mandir</a></li>
+                <li><a href="#">Sant Tukaram Maharaj Mandir</a></li>
+                <li><a href="#">Sant Muktabai Mandir</a></li>
+                <li><a href="#">Sant Nivrutinath Maharaj Mandir</a></li>
+                <li><a href="#">Sant Sopan Maharaj Mandir</a></li>
+                <li><a href="#">Sant Eknath Maharaj Mandir</a></li>
+                <li><a href="#">Sant Namdev Maharaj Mandir</a></li>
+                <li><a href="#">Sant Gajanan Maharaj Mandir</a></li>
+                <li><a href="#">Sant Kaikadi Maharaj Math</a></li>
+                <li><a href="#">Gopal Krushna Mandir</a></li>
+                <li><a href="#">Tulsi Vrundavan</a></li>
+              </ul>
+            </li>
+        
+            <li class="dropdown">
+              <a href="">
+                <span>Shopping</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="#">Masala Agarbatti / Udabatti</a></li>
+                <li><a href="#">Pedha</a></li>
+                <li><a href="#">Prasad</a></li>
+                <li><a href="#">Chiwada</a></li>
+                <li><a href="#">Shengdana Chatani</a></li>
+                <li><a href="#">Statues</a></li>
+                <li><a href="#">Photo Frames</a></li>
+                <li><a href="#">Stone Murtis</a></li>
+              </ul>
+            </li>
+        
+            <li class="dropdown">
+              <a href="">
+                <span>Review</span> 
+                <i class="bi bi-chevron-down toggle-dropdown"></i>
+              </a>
+              <ul>
+                <li><a href="#">English</a></li>
+                <li><a href="#">Hindi</a></li>
+                <li><a href="#">Marathi</a></li>
+              </ul>
+            </li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+        <a class="btn-getstarted" href="#">Get Started</a>
+      </div>
+  </header>
+  
+  {% endblock %}

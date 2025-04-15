@@ -1,0 +1,404 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>PandharpurGuide</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css" rel="stylesheet' %}">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- fas fa icons  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <link href="{% static 'assets/css/advertisement.css' %}" rel="stylesheet">
+</head>
+
+
+
+<body class="index-page">
+<!-- HTML Structure -->
+
+<div class="popup-container" id="popupContainer">
+  {% for message in messages %}
+  <div class="popup alert-{{ message.tags }}" role="alert">
+    <button class="cancel-btn" aria-label="Cancel">×</button>
+    <div class="popup-content">
+      <p>{{ message }}</p>
+      <div class="popup-buttons">
+        <button class="btn close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+
+
+
+
+
+<!-- JavaScript for functionality -->
+
+    <div class="header-container">
+        <div class="header-top">
+            <div class="logo">
+                <h1>PANDHRPURGUIDE.COM</h1>
+                <p>We Guide you for everything in Pandharpur</p>
+            </div>
+            
+            <div class="right-section">
+              <div class="auth-buttons">
+                  
+                      {% if user.is_authenticated %}
+
+                      {% if user.is_active and not user.is_staff and not user.is_superuser and not user.is_verified and not user.is_authority_to_manage_hotel and not user.is_admin %}
+
+
+                      <a href="{% url 'user:user_profile' %}" style="color: red;">
+                        <button class="btn btn-login">
+                          <i class="fas fa-user-circle"></i>regular user profile 
+                        </button>
+                      </a>
+
+                      
+
+                      {% elif user.is_active and user.is_staff and user.is_superuser and user.is_verified and user.is_authority_to_manage_hotel and user.is_admin %}
+                    
+                          <a href="{% url 'admin:index' %}" style="color: red;">
+                            <button class="btn btn-login">
+                              <i class="fas fa-user-circle"></i> Admin
+                            </button>
+                          </a>
+
+                          {% elif user.is_active and user.is_staff and user.is_superuser and user.is_verified and user.is_authority_to_manage_hotel  %}
+                          <a href="{% url 'user:maintainer_profile' %}" style="color: red;">
+                            <button class="btn btn-login">
+                              <i class="fas fa-user-circle"></i> sup-maintainer account
+                            </button>
+                          </a>
+                          {% elif not user.is_authority_to_manage_hotel and user.is_maintainer and user.is_active and not user.is_verified and user.is_staff %}
+                          <a href="{% url 'user:maintainer_profile' %}" style="color: red;"style="color: red; position: relative; display: inline-block;"title="this manager not authority to manage hotel permission to admin">
+                            <button class="btn btn-login" style="color: red; position: relative; display: inline-block;">
+                              <span style="                 
+                                      position: absolute;
+                                      top: 36%;
+                                      left: 0px;
+                                      height: 10px;
+                                      width: 10px;
+                                      background-color:rgb(27, 181, 55);
+                                      border-radius: 50%;
+                                      z-index: 1; "></span>
+                              <i class="fas fa-user-circle"></i> maintainer account
+                            </button>
+                          </a>
+                          {% elif not user.is_verified and user.is_active and user.is_superuser and not user.is_maintainer  %}
+                          <a href="{% url 'user:maintainer_profile' %}" style="color: red;"style="color: red; position: relative; display: inline-block;"title="Account not verified">
+                            <button class="btn btn-login" style="color: red; position: relative; display: inline-block;">
+                              
+                              <span style="                 
+                                      position: absolute;
+                                      top: 36%;
+                                      left: 0px;
+                                      height: 10px;
+                                      width: 10px;
+                                      background-color: #000000;
+                                      border-radius: 50%;
+                                      z-index: 1;
+                                                                "></span>
+                              <i class="fas fa-user-circle"></i> Sup-STAFF ACCOUNT
+                            </button>
+                          </a> 
+
+                          {% elif not user.is_verified and user.is_active  and user.is_staff and not user.is_superuser and not user.is_maintainer  %}
+                          <a href="{% url 'user:maintainer_profile' %}" style="color: red;"style="color: red; position: relative; display: inline-block;"title="Account not verified">
+                            <button class="btn btn-login" style="color: red; position: relative; display: inline-block;">
+                              
+                              <span style="                 
+                                      position: absolute;
+                                      top: 36%;
+                                      left: 0px;
+                                      height: 10px;
+                                      width: 10px;
+                                      background-color: #000000;
+                                      border-radius: 50%;
+                                      z-index: 1;
+                                                                "></span>
+                              <i class="fas fa-user-circle"></i> STAFF ACCOUNT
+                            </button>
+                          </a> 
+
+                          {% elif user.maintainer_profile  and user.is_maintainer %}
+                          <a href="{% url 'user:maintainer_profile' %}" style="color: red;">
+                            <button class="btn btn-login" style = 'color:orange;'>
+                              <i class="fas fa-user-circle"></i> maintainer account
+                            </button>
+                          </a>
+
+                          {% elif user.is_staff and user.is_active and not user.is_maintainer %}
+                    
+                          <a href="{% url 'user:staff_profile' %}" style="color: red;">
+                            <button class="btn btn-login">
+                              <i class="fas fa-user-circle"></i> staff account
+                            </button>
+                          </a>
+                          {% else %}
+                           
+                          <a href="{% url 'user:user_profile' %}" style="color: red;">
+                            <button class="btn btn-login">
+                              <i class="fas fa-user-circle"></i> user profile 
+                            </button>
+                          </a>
+                           
+                          {% endif %}
+                          
+                      {% else %}
+                          <a href="{% url 'user:signin' %}">
+                            <button class="btn btn-login">
+                              <i class="fas fa-user-circle"></i> Log In
+                            </button>
+                          </a>
+                      {% endif %}
+                  </button>
+
+                  
+                  
+                  <button class="btn btn-contact">
+                      <a href="">
+                          <i class="fas fa-envelope"></i> Contact Us
+                      </a>
+                  </button>
+                  
+                  <button class="btn btn-inquiry">
+                      <a href="">
+                          <i class="fas fa-users"></i> Group INQ.
+                      </a>
+                  </button>
+
+
+                    <input type="checkbox" id="theme-toggle" class="hidden-checkbox">
+                    <label for="theme-toggle" class="toggle-button">
+                      <div class="icon-wrapper">
+                        <svg class="icon sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="5"></circle>
+                          <line x1="12" y1="1" x2="12" y2="3"></line>
+                          <line x1="12" y1="21" x2="12" y2="23"></line>
+                          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                          <line x1="1" y1="12" x2="3" y2="12"></line>
+                          <line x1="21" y1="12" x2="23" y2="12"></line>
+                          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="icon moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                        </svg>
+                      </div>
+                    </label>
+                  </div>
+              
+              <div class="helpline">
+                <a href="tel:9172353945" class="helpline-link">
+                  <i class="fas fa-phone-alt helpline-icon"></i> 
+                  Helpline: 9142 20 9142
+                </a>
+              </div>
+              
+          </div>
+        </div>
+    </div>
+
+<!-- HTML for upper-menu -->
+    <div class="advertisements-upper-menu">
+    {% for ad in advertisements %}
+        {% if ad.position == "upper-menu" and ad.status == "enable" %}
+            <div class="advertisement fade-in" id="ad-upper-menu-{{ forloop.counter }}">
+                <button class="cancel-btn" onclick="cancelAd('ad-upper-menu-{{ forloop.counter }}')">X</button>
+                {% if ad.is_google_adsense %}
+                    <div class="google-adsense">
+                        {{ ad.google_adsense_code|safe }}
+                    </div>
+                {% else %}
+                    {% if ad.site_link %}
+                        <a href="{{ ad.site_link }}" target="_blank">
+                            {% if ad.image %}
+                                <img src="{{ ad.image.url }}" alt="{{ ad.title }}" />
+                            {% endif %}
+                            <h6>{{ ad.title }}</h6>
+                        </a>
+                    {% else %}
+                        {% if ad.image %}
+                            <img src="{{ ad.image.url }}" alt="{{ ad.title }}" />
+                        {% endif %}
+                        <h6>{{ ad.title }}</h6>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+
+    {% block second_nav %}
+
+      {% endblock %}
+
+
+
+   
+   
+      {% block content %}
+
+
+        {% endblock %}
+
+
+
+
+
+
+
+
+   {% comment %} footer  {% endcomment %}
+<footer id="footer" class="footer dark-background">
+
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6 footer-about">
+          <a href="index.html" class="logo d-flex align-items-center">
+            <span class="sitename">PandharpurGuide</span>
+          </a>
+          <div class="footer-contact pt-3">
+            <p>A108 Adam Street</p>
+            <p>New York, NY 535022</p>
+            <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+            <p><strong>Email:</strong> <span>info@example.com</span></p>
+          </div>
+          <div class="social-links d-flex mt-4">
+            <a href=""><i class="bi bi-twitter-x"></i></a>
+            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href=""><i class="bi bi-instagram"></i></a>
+            <a href=""><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-2 col-md-3 footer-links">
+          <h4>Our Services</h4>
+          <ul>
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Web Development</a></li>
+            <li><a href="#">Product Management</a></li>
+            <li><a href="#">Marketing</a></li>
+            <li><a href="#">Graphic Design</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-12 footer-newsletter">
+          <h4>Our Newsletter</h4>
+          <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>
+          <form action="forms/newsletter.php" method="post" class="php-email-form">
+            <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>
+            <div class="loading">Loading</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Your subscription request has been sent. Thank you!</div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="container copyright text-center mt-4">
+      <p>© <span>Copyright</span> <strong class="px-1 sitename">PandharpurGuide</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">
+        Designed by <a href="">IlitecodeMade</a> Distributed by <a href="">ThemeWagon
+      </div>
+    </div>
+
+  </footer>
+
+<!-- HTML for below-footer -->
+<div class="advertisements-below-footer" >
+  {% for ad in advertisements %}
+      {% if ad.position == "below-footer" and ad.status == "enable" %}
+          <div class="advertisement fade-in" id="ad-below-footer-{{ forloop.counter }}">
+              <button class="cancel-btn" onclick="cancelAd('ad-below-footer-{{ forloop.counter }}')">X</button>
+              {% if ad.is_google_adsense %}
+                  <div class="google-adsense">
+                      {{ ad.google_adsense_code|safe }}
+                  </div>
+              {% else %}
+                  {% if ad.site_link %}
+                      <a href="{{ ad.site_link }}" target="_blank">
+                          {% if ad.image %}
+                              <img src="{{ ad.image.url }}" alt="{{ ad.title }}" />
+                          {% endif %}
+                          <h6>{{ ad.title }}</h6>
+                      </a>
+                  {% else %}
+                      {% if ad.image %}
+                          <img src="{{ ad.image.url }}" alt="{{ ad.title }}" />
+                      {% endif %}
+                      <h6>{{ ad.title }}</h6>
+                  {% endif %}
+              {% endif %}
+          </div>
+      {% endif %}
+  {% endfor %}
+</div>
+ 
+ 
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  {% comment %} <div id="preloader"></div> {% endcomment %}
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/waypoints/noframework.waypoints.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+  <script src="{% static 'assets/js/advertisement.js' %}"></script>
+
+</body>
+
+</html>

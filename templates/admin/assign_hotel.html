@@ -1,0 +1,208 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Unassigned Staff -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h4 class="mb-0">Unassigned Staff</h4>
+                </div>
+                <div class="card-body">
+                    {% for staff in unassigned_staff %}
+                    <div class="staff-card p-3 mb-3 border rounded bg-light">
+                        <form method="POST" class="assignment-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="staff_id" value="{{ staff.staff_id }}">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">{{ staff.userf_name }}</h5>
+                                    <small class="text-muted">ID: {{ staff.staff_id }}</small>
+                                </div>
+                                <div class="ms-3">
+                                    <select name="hotel_id" class="form-select form-select-sm">
+                                        <option value="">Select Hotel</option>
+                                        {% for hotel in hotels %}
+                                        <option value="{{ hotel.id }}" 
+                                            {% if hotel.is_assigned %}disabled class="text-muted"{% endif %}>
+                                            {{ hotel.name }} ({{ hotel.location }})
+                                            {% if hotel.is_assigned %} - Assigned{% endif %}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button type="submit" name="action" value="assign" 
+                                    class="btn btn-sm btn-primary ms-2">
+                                    Assign
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-info mb-0">All staff members are assigned</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Assigned Staff -->
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Current Assignments</h4>
+                </div>
+                <div class="card-body">
+                    {% for staff in assigned_staff %}
+                    <div class="assignment-card p-3 mb-3 border rounded">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="staff_id" value="{{ staff.staff_id }}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1">{{ staff.user.get_full_name }}</h5>
+                                    <small class="text-muted">ID: {{ staff.staff_id }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-primary">{{ staff.hotel.name }}</span>
+                                    <button type="submit" name="action" value="unassign" 
+                                        class="btn btn-sm btn-danger ms-2">
+                                        Unassign
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-info mb-0">No current assignments</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unassigned Hotels -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Available Hotels</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {% for hotel in hotels %}
+                    {% if not hotel.is_assigned %}
+                    <div class="col-md-4 mb-3">
+                        <div class="hotel-card p-3 border rounded">
+                            <h5>{{ hotel.name }}</h5>
+                            <p class="mb-1 text-muted">{{ hotel.location }}</p>
+                            <span class="badge bg-danger">Available</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% empty %}
+                    <div class="col-12">
+                        <div class="alert alert-success mb-0">All hotels are assigned</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% comment %} {% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <h2>Assign Hotel to Staff</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" class="mb-4">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="staff_id">Staff Member:</label>
+                <select name="staff_id" id="staff_id" class="form-control" required>
+                    <option value="">Select Staff Member</option>
+                    {% for staff in all_staff %}
+                    <option value="{{ staff.staff_id }}" 
+                        {% if requested_staff_id == staff.staff_id %}selected{% endif %}>
+                        {{ staff.user.get_full_name }} ({{ staff.staff_id }})
+                        {% if staff.hotel %} - Currently assigned to {{ staff.hotel.name }}{% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="hotel_id">Hotel:</label>
+                <select name="hotel_id" id="hotel_id" class="form-control" required>
+                    <option value="">Select Hotel</option>
+                    {% for hotel in hotels %}
+                    <option value="{{ hotel.id }}">
+                        {{ hotel.hotel_name }} - {{ hotel.location }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Assign Hotel</button>
+        </form>
+    </div>
+
+    <div class="col-md-6">
+        <h3>Staff Assignment Status</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Staff ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Assigned Hotel</th>
+                        <th>Actions</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in all_staff %}
+                    <tr>
+                        <td>{{ staff.staff_id }}</td>
+                        <td>{{ staff.user.get_full_name }}</td>
+                        <td>{{ staff.user.email }}</td>
+                        <td>
+                            {% if staff.hotel %}
+                                {{ staff.hotel.hotel_name }} ({{ staff.hotel.location }})
+                            {% else %}
+                                <span class="text-danger">Not assigned</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'assign-hotel' %}?staff_id={{ staff.staff_id }}" class="btn btn-sm btn-primary">
+                                Assign/Change Hotel
+                            </a>
+                        </td>
+                        <td>
+                            {% if staff.hotel %}
+                                <span class="badge badge-success">Assigned</span>
+                            {% else %}
+                                <span class="badge badge-warning">Unassigned</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No staff members found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} {% endcomment %}

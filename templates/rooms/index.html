@@ -1,0 +1,673 @@
+{% extends 'rooms/room_basic.html' %}
+{% block title %}Hotel {% endblock title %}
+{% load static %}
+{% load app_tags %}
+{% block content %}
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Booking</title>
+  <style>
+    :root {
+      --primary-color: #4a6fa0;
+      --primary-hover: #3a5980;
+      --accent-color: #f8ac59;
+      --light-bg: #f8f9fa;
+      --dark-text: #333;
+      --light-text: #fff;
+      --border-radius: 8px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--dark-text);
+      background-color: #f5f7f9;
+    }
+    
+    .search-section {
+      background: linear-gradient(135deg, var(--primary-color), #2c3e50);
+      padding: 2rem 0;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+    
+    .search-container {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    
+    .search-container h3 {
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .form-label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--dark-text);
+    }
+    
+    .form-control, .form-select {
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+      border: 1px solid #e0e0e0;
+      box-shadow: none;
+      transition: all 0.3s;
+    }
+    
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(74, 111, 160, 0.25);
+    }
+    
+    .btn-search {
+      background-color: var(--accent-color);
+      border: none;
+      color: var(--dark-text);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      font-weight: 600;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    
+    .btn-search:hover {
+      background-color: #e69c4a;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .filter-box {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 1rem;
+    }
+    
+    .filter-box h5 {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-weight: 600;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .amenity-group {
+      margin-bottom: 0.75rem;
+    }
+    
+    .form-check-label {
+      cursor: pointer;
+      padding-left: 0.5rem;
+    }
+    
+    .room-card {
+      margin-bottom: 1.5rem;
+    }
+    
+    .card {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      border: none;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .card-title {
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    
+    .room-heading {
+      color: #8a56ac;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+    
+    .location {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    .location i {
+      color: var(--primary-color);
+    }
+    
+    .details-row {
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      background-color: var(--light-bg);
+      border-radius: var(--border-radius);
+      padding: 0.75rem;
+    }
+    
+    .btn-book {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: var(--border-radius);
+      padding: 0.6rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .btn-book:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+    
+    .modal-content {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+    
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      font-size: 1.2rem;
+      line-height: 1;
+      z-index: 10;
+    }
+    
+    .availability-notice {
+      background-color: #d4edda;
+      color: #155724;
+      text-align: center;
+      padding: 0.5rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+      .search-container {
+        padding: 1rem;
+      }
+      
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      
+      .filter-box {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+      
+      .details-row {
+        font-size: 0.85rem;
+      }
+    }
+    
+    /* Checkbox custom styling */
+    .form-check-input {
+      width: 1.1em;
+      height: 1.1em;
+      margin-top: 0.2em;
+      cursor: pointer;
+    }
+    
+    .form-check-input:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    /* Image hover effect */
+    .img-container {
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .card-img-top {
+      transition: transform 0.5s;
+    }
+    
+    .img-container:hover .card-img-top {
+      transform: scale(1.05);
+    }
+    
+    .img-container::after {
+      content: 'Click to enlarge';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0,0,0,0.6);
+      color: white;
+      text-align: center;
+      padding: 5px;
+      font-size: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .img-container:hover::after {
+      opacity: 1;
+    }
+  </style>
+
+</head>
+<body>
+
+<!-- Search Section -->
+<!-- Search Section -->
+<section class="search-section">
+  <div class="container py-2">
+    <div class="search-container">
+      <h3 class="text-center mb-4">Find Your Perfect Stay</h3>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label" for="location">Location</label>
+            <select class="form-select" id="location" name="search_location">
+              <option selected disabled>Select location</option>
+              {% for each_location, each_hotel_id in all_location %}
+              <option value="{{each_hotel_id}}">{{each_location}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          
+          <div class="col-md-3">
+            <label class="form-label" for="check-in">Check In</label>
+            <input class="form-control date-input" id="check-in" min="{% now 'Y-m-d' %}" name="cin" placeholder="Check in date" required type="date" onchange="updateCheckoutMinDate()">
+          </div>
+          
+          <div class="col-md-3">
+            <label class="form-label" for="check-out">Check Out</label>
+            <input class="form-control date-input" id="check-out" name="cout" placeholder="Check out date" required type="date">
+          </div>
+          
+          <div class="col-md-2">
+            <label class="form-label" for="capacity">Guests</label>
+            <input class="form-control" id="capacity" min="1" name="capacity" placeholder="Number of guests" required type="number">
+          </div>
+          
+          <div class="col-12 mt-4">
+            <button class="btn-search" type="submit">Search Availability</button>
+          </div>
+        </div>
+      </form>
+      <div class="popup-container" id="popupContainer">
+      {% if rooms %}
+      <div class="popup rooms-available" role="alert">
+        <button class="cancel-btn" aria-label="Cancel">×</button>
+        <div class="popup-content">
+          <div class="check-circle">
+            <i class="fas fa-check"></i>
+          </div>
+          <p>Rooms Available for your selected dates!</p>
+          <div class="popup-buttons">
+            <button class="btn close-btn">Continue</button>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .date-input {
+    position: relative;
+  }
+  .date-input::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+  }
+  .date-input:before {
+    content: attr(placeholder);
+    position: absolute;
+    color: #6c757d;
+    pointer-events: none;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .date-input:focus:before,
+  .date-input:not([value=""]):before {
+    display: none;
+  }
+</style>
+
+<script>
+  // Set initial min date for checkout (tomorrow)
+  document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    const checkOutInput = document.getElementById('check-out');
+    checkOutInput.min = formatDate(tomorrow);
+    
+    // Clear any existing dates when page loads
+    document.getElementById('check-in').value = '';
+    document.getElementById('check-out').value = '';
+  });
+
+  function updateCheckoutMinDate() {
+    const checkInInput = document.getElementById('check-in');
+    const checkOutInput = document.getElementById('check-out');
+    
+    if (checkInInput.value) {
+      const checkInDate = new Date(checkInInput.value);
+      const minCheckOutDate = new Date(checkInDate);
+      minCheckOutDate.setDate(minCheckOutDate.getDate() + 1);
+      
+      checkOutInput.min = formatDate(minCheckOutDate);
+      
+      // If current checkout date is before new min date, clear it
+      if (checkOutInput.value && new Date(checkOutInput.value) < minCheckOutDate) {
+        checkOutInput.value = '';
+      }
+    }
+  }
+
+  function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+</script>
+
+<!-- Results Section -->
+<div class="container py-4">
+  <div class="row">
+    <!-- Filter Sidebar -->
+    <div class="col-lg-3 col-md-4 mb-4">
+      <div class="filter-box">
+        <h5><i class="fas fa-filter me-2"></i>Filter Rooms</h5>
+        <div class="amenities-filter">
+          <div class="form-check amenity-group">
+            <input class="form-check-input amenity-filter" data-amenity="ac" id="ac" type="checkbox">
+            <label class="form-check-label" for="ac">
+              <i class="fas fa-snowflake me-2 text-primary"></i>Air Conditioning
+            </label>
+          </div>
+          
+          <div class="form-check amenity-group">
+            <input class="form-check-input amenity-filter" data-amenity="fan" id="fan" type="checkbox">
+            <label class="form-check-label" for="fan">
+              <i class="fas fa-wind me-2 text-primary"></i>Fan
+            </label>
+          </div>
+          
+          <div class="form-check amenity-group">
+            <input class="form-check-input amenity-filter" data-amenity="wifi" id="wifi" type="checkbox">
+            <label class="form-check-label" for="wifi">
+              <i class="fas fa-wifi me-2 text-primary"></i>Wi-Fi
+            </label>
+          </div>
+          
+          <div class="form-check amenity-group">
+            <input class="form-check-input amenity-filter" data-amenity="parking" id="parking" type="checkbox">
+            <label class="form-check-label" for="parking">
+              <i class="fas fa-parking me-2 text-primary"></i>Parking
+            </label>
+          </div>
+          
+          <div class="form-check amenity-group">
+            <input class="form-check-input amenity-filter" data-amenity="heater" id="heater" type="checkbox">
+            <label class="form-check-label" for="heater">
+              <i class="fas fa-fire me-2 text-primary"></i>Heater
+            </label>
+          </div>
+          
+          <div class="form-check amenity-group">
+            <input class="form-check-input amenity-filter" data-amenity="food_facility" id="food_facility" type="checkbox">
+            <label class="form-check-label" for="food_facility">
+              <i class="fas fa-utensils me-2 text-primary"></i>Food Facility
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Room Results -->
+    <div class="col-lg-9 col-md-8">
+      <div class="row" id="room-list">
+        {% for each_room in rooms %}
+        {% if each_room.get_status_display == 'available' %}
+        <div class="col-lg-6 col-xl-4 room-card" 
+             data-ac="{{ each_room.ac }}" 
+             data-fan="{{ each_room.fan }}" 
+             data-food_facility="{{ each_room.food_facility }}" 
+             data-heater="{{ each_room.heater }}" 
+             data-parking="{{ each_room.parking }}" 
+             data-room-id="{{ each_room.id }}" 
+             data-wifi="{{ each_room.wifi }}">
+          <div class="card h-100">
+            <!-- Room Image -->
+            <div class="img-container">
+              {% if each_room.hotel.image1 %}
+              <img alt="Room Image" class="card-img-top gallery-img" onclick="openModal(this)" src="{{ each_room.image1.url }}">
+              {% else %}
+              <img alt="Room placeholder" class="card-img-top gallery-img" onclick="openModal(this)" src="https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg">
+              {% endif %}
+            </div>
+            
+            <div class="card-body">
+              <h5 class="card-title">{{ each_room.hotel.name|upper }} - Room {{ each_room.room_number|lower }}</h5>
+              <p class="room-heading text-center mb-3">{{ each_room.heading|title }}</p>
+              
+              <div class="location mb-3">
+                <i class="fas fa-map-marker-alt me-2"></i>{{ each_room.hotel.location }}
+              </div>
+              
+              <p class="card-text">{{ each_room.description }}</p>
+              
+              <div class="details-row">
+                <div class="row">
+                  <div class="col-6">
+                    <p class="mb-1"><i class="far fa-clock me-2"></i><strong>Check-In:</strong></p>
+                    <p class="ms-4">{{ each_room.check_in_time|default_if_none:"N/A" }}</p>
+                  </div>
+                  <div class="col-6">
+                    <p class="mb-1"><i class="far fa-clock me-2"></i><strong>Check-Out:</strong></p>
+                    <p class="ms-4">{{ each_room.check_out_time|default_if_none:"N/A" }}</p>
+                  </div>
+                </div>
+                
+                <div class="row mt-2">
+                  <div class="col-6">
+                    <p class="mb-0"><i class="fas fa-utensils me-2"></i><strong>Food:</strong></p>
+                    <p class="ms-4">{{ each_room.food_facility|yesno:"Available,Not Available" }}</p>
+                  </div>
+                  <div class="col-6">
+                    <p class="mb-0"><i class="fas fa-parking me-2"></i><strong>Parking:</strong></p>
+                    <p class="ms-4">{{ each_room.parking|yesno:"Available,Not Available" }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-footer bg-white border-0 text-end pb-3">
+              <a href="{% url 'bookroompage' %}?roomid={{ each_room.id }}">
+                <button class="btn-book">
+                  <i class="fas fa-bookmark me-2"></i>Book Now
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Modal -->
+<div aria-hidden="true" aria-labelledby="imageModalLabel" class="modal fade" id="imageModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <button aria-label="Close" class="close-button" data-bs-dismiss="modal">×</button>
+      <img alt="Expanded View" class="img-fluid" id="modalImage" src="">
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Filter functionality
+    const amenityFilters = document.querySelectorAll('.amenity-filter');
+    const roomCards = document.querySelectorAll('.room-card');
+    
+    amenityFilters.forEach(filter => {
+      filter.addEventListener('change', updateRoomList);
+    });
+    
+    function updateRoomList() {
+      const activeFilters = Array.from(amenityFilters)
+        .filter(filter => filter.checked)
+        .map(filter => filter.dataset.amenity);
+      
+      roomCards.forEach(card => {
+        if (activeFilters.length === 0) {
+          card.style.display = 'block';
+          return;
+        }
+        
+        const shouldDisplay = activeFilters.every(filter => 
+          card.dataset[filter] === 'True' || card.dataset[filter] === 'true');
+        
+        card.style.display = shouldDisplay ? 'block' : 'none';
+      });
+    }
+    
+    // Image modal functionality
+    window.openModal = function(img) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = img.src;
+      
+      const bootstrapModal = new bootstrap.Modal(modal);
+      bootstrapModal.show();
+    };
+    
+    // Initialize Bootstrap components
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+{% comment %} this for the filter purpose  {% endcomment %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Add event listeners to amenity checkboxes
+                const amenityFilters = document.querySelectorAll(".amenity-filter");
+        
+                amenityFilters.forEach(function(filter) {
+                    filter.addEventListener("change", function() {
+                        // Get the selected amenities
+                        const selectedAmenities = getSelectedAmenities();
+        
+                        // Filter rooms based on selected amenities
+                        filterRooms(selectedAmenities);
+                    });
+                });
+            });
+        
+            // Function to get selected amenities from checkboxes
+            function getSelectedAmenities() {
+                const selectedAmenities = [];
+        
+                const amenityFilters = document.querySelectorAll(".amenity-filter:checked");
+                amenityFilters.forEach(function(filter) {
+                    selectedAmenities.push(filter.getAttribute("data-amenity"));
+                });
+        
+                return selectedAmenities;
+            }
+        
+            // Function to filter rooms based on selected amenities
+            function filterRooms(selectedAmenities) {
+                const rooms = document.querySelectorAll(".room-card");
+        
+                rooms.forEach(function(room) {
+                    let matches = true;
+        
+                    // For each selected amenity, check if the room has the corresponding attribute with value "True"
+                    selectedAmenities.forEach(function(amenity) {
+                        const roomAmenity = room.getAttribute("data-" + amenity);
+                        // If the room doesn't have the selected amenity (or if it's not true), hide it
+                        if (roomAmenity !== "True") {
+                            matches = false;
+                        }
+                    });
+        
+                    // Show or hide the room based on whether it matches the selected amenities
+                    if (matches) {
+                        room.style.display = "block"; // Show room if matches
+                    } else {
+                        room.style.display = "none"; // Hide room if doesn't match
+                    }
+                });
+            }
+
+
+
+
+            // ------------------------
+            function openModal(img) {
+            var modal = document.getElementById('imageModal');
+            var modalImg = document.getElementById('modalImage');
+            modalImg.src = img.src;
+            $(modal).modal('show');
+            // ----------------
+            function openModal(img) {
+                const modalImage = document.getElementById('modalImage');
+                modalImage.src = img.src; // Set the modal image source to the clicked image source
+                const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+                modal.show();
+            }
+    }
+        </script>
+        
+        
+</body>
+</html>
+
+{% endblock %}
+

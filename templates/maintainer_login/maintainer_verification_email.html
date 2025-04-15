@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verification Email</title>
+</head>
+<body>
+    <h1>Welcome, {{ name }}!</h1>
+    <p>Thank you for registering as a maintainer with PandharpurGuide.</p>
+    <p>Your username: {{ username }}</p>
+    <p>Please click the link below to verify your account:</p>
+    <p><a href="{{ verification_url }}">{{ verification_url }}</a></p>
+    <p>If the link doesn't work, copy and paste it into your browser.</p>
+    <p>Regards,<br>PandharpurGuide Team</p>
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease-in;
+        }
+
+        .email-header {
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            max-width: 150px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-top: 10px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .email-body {
+            padding: 30px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .btn-verify {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #4a90e2;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            animation: bounceIn 0.8s ease;
+        }
+
+        .btn-verify:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .company-info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .company-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .email-footer {
+            background: #f1f1f1;
+            padding: 15px;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+
+        a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 5px;
+            }
+
+            .email-body {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .btn-verify {
+                display: block;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome, {{ name }}!</h1>
+    <p>Thank you for registering as a maintainer with PandharpurGuide.</p>
+    <p>Your username: {{ username }}</p>
+    <p>Please click the link below to verify your account:</p>
+    <p><a href="{{ verification_url }}">{{ verification_url }}</a></p>
+    <p>If the link doesn't work, copy and paste it into your browser.</p>
+    <p>Regards,<br>PandharpurGuide Team</p>
+</body>
+</html>

@@ -1,0 +1,167 @@
+{% extends 'rooms/room_basic.html' %}
+{% block title %}All Bookings{% endblock title %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Bookings</title>
+    <!-- Bootstrap CSS -->
+
+    <style>
+
+        a {
+            text-decoration: none;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .bookings-container {
+            animation: fadeIn 0.7s ease-out;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .table-responsive {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .table thead {
+            position: sticky;
+            top: 0;
+            background-color: #007bff;
+            color: white;
+            z-index: 10;
+        }
+
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(0,123,255,0.1);
+            transform: scale(1.01);
+        }
+
+        .booking-past {
+            background-color: #ffdddd !important;
+            color: #721c24;
+        }
+
+        .booking-current {
+            background-color: #dfffdf !important;
+            color: #155724;
+        }
+
+        .booking-future {
+            background-color: #e6f2ff !important;
+            color: #0056b3;
+        }
+
+        @media (max-width: 768px) {
+            .table-responsive {
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="bookings-container">
+            <h3 class="text-center text-success mb-4">
+                <i class="fas fa-calendar-alt me-2"></i>All Bookings
+            </h3>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user me-2"></i>User</th>
+                            <th><i class="fas fa-door-open me-2"></i>Room No</th>
+                            <th><i class="fas fa-bed me-2"></i>Room Type</th>
+                            <th><i class="fas fa-map-marker-alt me-2"></i>Hotel Location</th>
+                            <th><i class="fas fa-users me-2"></i>Capacity</th>
+                            <th><i class="fas fa-sign-in-alt me-2"></i>Check-in</th>
+                            <th><i class="fas fa-sign-out-alt me-2"></i>Check-out</th>
+                            <th><i class="fas fa-dollar-sign me-2"></i>Price per Night</th>
+                            <th><i class="fas fa-percent me-2"></i>Price & Discount</th>
+                            <th><i class="fas fa-check-square"></i> Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        {% if bookings %}
+                            {% for booking in bookings %}
+                            <tr class="booking-{{ booking.status }}">
+                                <td>{{ booking.guest.username }}</td>
+                                <td>{{ booking.room.room_number }}</td>
+                                <td>{{ booking.room.get_room_type_display }}</td>
+                                <td>{{ booking.room.hotel.location }}</td>
+                                <td>{{ booking.room.capacity }}</td>
+                                <td>{{ booking.check_in }}</td>
+                                <td>{{ booking.check_out }}</td>
+                                <td>₹{{ booking.room.price }}</td>
+                                <td>₹{{ booking.room.discounted_price|floatformat:2 }}
+                                    ({{ booking.room.discount }}% )</td>
+                                
+                                {% if booking.check_in <= current_date and booking.check_out < current_date %}
+                                <td style="color:red;">  <button class="btn btn-warning btn-sm">Expired</button>
+                                </td>
+                                {% else %} 
+                                <td style="color: green;">  <button class="btn btn-info btn-sm">Ongoing</button>
+                                </td>{% endif %}
+                               
+                            {% endfor %}
+
+                            
+                        {% else %}
+                            <tr>
+                                <td colspan="10" class="text-center">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    No bookings available
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tbody = document.getElementById('bookingsTableBody');
+            const rows = tbody.getElementsByTagName('tr');
+            const today = new Date();
+
+            for (let row of rows) {
+                if (row.cells.length > 1) {  // Exclude the "No bookings" row
+                    const checkInDate = new Date(row.cells[5].textContent);
+                    const checkOutDate = new Date(row.cells[6].textContent);
+
+                    if (checkOutDate < today) {
+                        row.classList.add('booking-past');
+                    } else if (checkInDate <= today && checkOutDate >= today) {
+                        row.classList.add('booking-current');
+                    } else {
+                        row.classList.add('booking-future');
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

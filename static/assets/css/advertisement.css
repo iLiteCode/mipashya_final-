@@ -1,0 +1,106 @@
+
+
+
+
+
+/* call button */
+
+.helpline {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .helpline-link {
+    text-decoration: none;
+    color: red; 
+    transition: color 0.3s ease;
+  }
+  
+  .helpline-icon {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-right: 5px;
+  }
+  
+  .helpline:hover .helpline-link {
+    color: #007bff; /* Hover color, adjust as needed */
+  }
+  
+  .helpline:hover .helpline-icon {
+    opacity: 1;
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 1768px) {
+    .helpline-icon {
+      opacity: 1; /* Always show icon on mobile */
+    }
+  }
+
+
+
+/* End call button */
+
+
+
+/* Unified CSS */
+    .advertisements-upper-menu,
+    .advertisements-below-footer {
+        width: 100%;
+        position: relative;
+        text-align: center;
+        padding: 10px 0;
+    }
+    
+    .advertisements-upper-menu {
+        margin-bottom: 10px;
+    }
+    
+    .advertisements-below-footer {
+        margin-top: 10px;
+    }
+    
+    .advertisement {
+        display: none;
+        position: relative;
+        width: 80%;
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .advertisement img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .cancel-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        border: none;
+        background: #ff4444;
+        color: white;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .cancel-btn:hover {
+        background: #cc0000;
+    }
+    
+    .fade-in {
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }

@@ -1,0 +1,25 @@
+@login_required(login_url='/')
+def hotel_staff_edit_room(request, room_id):
+    if not hasattr(request.user, 'hotel_staff_profile'):
+        return HttpResponse('Access Denied - Not a Hotel Staff')
+
+    staff = HotelStaff.objects.get(user=request.user)
+    room = get_object_or_404(Room, id=room_id, hotel=staff.hotel)
+
+    if request.method == "POST":
+        try:
+            room.room_number = request.POST['room_number']
+            room.room_type = request.POST['room_type']
+            room.capacity = int(request.POST['capacity'])
+            room.price = float(request.POST['price'])
+            room.status = request.POST['status']
+            if 'image' in request.FILES:
+                room.image = request.FILES['image']
+            room.full_clean()
+            room.save()
+            messages.success(request, "Room updated successfully.")
+            return redirect('hotel_staff_panel')
+        except Exception as e:
+            messages.error(request, f"Error updating room: {e}")
+
+    return render(request, 'hotel_staff/edit_room.html', {'room': room})
